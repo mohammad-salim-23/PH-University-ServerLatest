@@ -1,17 +1,14 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import { UserControllers } from './user.controller';
+import validateRequest from '../../../middleware/validateRequest';
+import { createStudentValidationSchema } from '../student/student.validation';
 
 const router =  express.Router();
 
-const shenaBahini=(name)=>{
-return async (req:Request,res:Response,next:NextFunction)=>{
-    console.log(`I am a ShenaBahini and my name is ${name}`);
-    // next();
-}
-};
+
 // will call controller function
 router.post('/create-student',
-    shenaBahini("validateRequest"),
+    validateRequest(createStudentValidationSchema),
     UserControllers.createStudent);
 
 export const UserRoutes = router;

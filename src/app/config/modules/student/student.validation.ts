@@ -1,4 +1,4 @@
-import { isDecimal } from "validator";
+
 import { z } from "zod";
 const userNameValidationSchema = z.object({
     firstName: z
@@ -36,27 +36,29 @@ const userNameValidationSchema = z.object({
   });
   
   // Main Student Schema
-  const studentValidationSchema = z.object({
-    id: z.string().min(1, { message: 'Student ID is required' }),
-    password:z.string().max(20),
-    name: userNameValidationSchema,
-    gender: z.enum(['male', 'female', 'other'], { required_error: 'Gender is required' }),
-    dateOfBirth: z.string().optional(),
-    email: z.string().email({ message: 'Invalid email address' }),
-    avater: z.string().optional(),
-    contactNumber: z.string().min(1, { message: 'Contact number is required' }),
-    emergencyContactNumber: z
-      .string()
-      .min(1, { message: 'Emergency contact number is required' }),
-    bloodGroup: z
-      .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-      .optional(),
-    presentAddress: z.string().min(1, { message: 'Present address is required' }),
-    permanentAddress: z.string().min(1, { message: 'Permanent address is required' }),
-    gurdian: guardianValidationSchema,
-    localGuardian: localGuardianValidationSchema,
-    profiling: z.string().optional(),
-    isActive: z.enum(['active', 'blocked']).default('active'),
-    isDeleted:z.boolean(),
-  });
-  export default studentValidationSchema;
+ export const createStudentValidationSchema = z.object({
+    body:z.object({
+      password:z.string().max(20),
+      student:z.object({   name: userNameValidationSchema,
+      gender: z.enum(['male', 'female', 'other'], { required_error: 'Gender is required' }),
+      dateOfBirth: z.date().optional(),
+      email: z.string().email({ message: 'Invalid email address' }),
+      avater: z.string().optional(),
+      contactNumber: z.string().min(1, { message: 'Contact number is required' }),
+      emergencyContactNumber: z
+        .string()
+        .min(1, { message: 'Emergency contact number is required' }),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string().min(1, { message: 'Present address is required' }),
+      permanentAddress: z.string().min(1, { message: 'Permanent address is required' }),
+      gurdian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      profiling: z.string().optional()})
+      
+    })
+  })
+  export const studentValidations={
+    createStudentValidationSchema
+  }
