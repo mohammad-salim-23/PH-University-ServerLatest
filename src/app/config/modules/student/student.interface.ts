@@ -37,6 +37,7 @@ export type TStudent={
     gurdian:TGurdian;
     localGuardian:TLocalGuardian;
     profiling?:string;
+    admissionSemester:Types.ObjectId;
     isDeleted?:boolean;
 }
 /*for creating static*/
