@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import config from "../..";
 import { TAcademicSemester } from "../academicSemester/academicSemester.interface";
 import { AcademicSemester } from "../academicSemester/academicSemester.model";
@@ -6,6 +7,8 @@ import { Student } from "../student/student.model";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 import { generateStudentId } from "./user.utils";
+import AppError from "../../../errors/AppError";
+import { StatusCodes } from "http-status-codes";
 
 const createStudentIntoDB = async(password:string,payload:TStudent)=>{
 
@@ -22,22 +25,35 @@ const createStudentIntoDB = async(password:string,payload:TStudent)=>{
    if(!admissionSemester){
     throw new Error('admissionSemester not found');
    }
-    //set manually generated it
-    userData.id = await generateStudentId(admissionSemester);
+   //transection and rollback mongoose session
+   const session = await mongoose.startSession();
+   try{
+  //set generated it
+  userData.id = await generateStudentId(admissionSemester);
 
-    //create a user
-    const newUsr= await User.create(userData);
-    //create a student
-    if(Object.keys(newUsr).length){
-        //set id,_id as user
-        payload.id = newUsr.id; //embeding id
-        payload.user = newUsr._id;//reference _id
-
-    const newStudent = await Student.create(payload);
-    return newStudent;
+  //create a user (transaction-1)
+  const newUser= await User.create([userData],{session});//array
+  
+  //create a student
+  if(!newUser.length){
+    throw new AppError(StatusCodes.BAD_REQUEST,'Failed to create user');
+  }
+   //set id, _id as user
+   payload.id = newUser[0].id;
+   payload.user = newUser[0]._id;//refference id
+ //create a student(transaction-2)
+  const newStudent = await Student.create([payload],{session});
+  if(!newStudent.length){
+    throw new AppError(StatusCodes.BAD_REQUEST,'Failed to create student');
+  }
+  await session.commitTransaction();
+  await session.endSession();
+    }catch(err){
+        await session.abortTransaction();
+        console.error(err);
+        await session.endSession();
+        throw new Error('Failed to create student');
     }
-   
-
 }
 export const UserService={
     createStudentIntoDB 
