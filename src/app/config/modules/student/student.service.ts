@@ -30,29 +30,41 @@ const getSingleStudentsFromDB=async(id:string)=>{
     return result;
 }
 
-const deleteStudentsFromDB=async(id:string)=>{
-   const session = await mongoose.startSession();
-   try{
-    session.startTransaction();
-    const deleteStudent = await Student.findOneAndUpdate(
-        {id},
-        {isDeleted:true},
-        {new:true,session}
-    );
-    if(!deleteStudent){
-        throw new AppError(StatusCodes.BAD_REQUEST,'Failed to delete student');
-    }
-    const deleteUser = await User.findOneAndUpdate(
-      {id},
-      {isDeleted:true},
-      {new:true,session}
-    )
-   }catch(err){
+const deleteStudentsFromDB = async (id: string) => {
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      const deleteStudent = await Student.findOneAndUpdate(
+        { id },
+        { isDeleted: true },
+        { new: true, session }
+      );
+  
+      if (!deleteStudent) {
+        throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to delete student');
+      }
+  
+      const deleteUser = await User.findOneAndUpdate(
+        { id },
+        { isDeleted: true },
+        { new: true, session }
+      );
+  
+      if (!deleteUser) {
+        throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to delete user');
+      }
+  
+      await session.commitTransaction();
+      await session.endSession();
+      return deleteStudent;
+    } catch (err) {
+      console.error('Transaction Error:', err);
       await session.abortTransaction();
       await session.endSession();
-      throw new Error('Failed to delete studetent');
-   }
-}
+      throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to delete student');
+    }
+  };
+  
 
 
 export const StudentServices={

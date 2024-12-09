@@ -16,7 +16,7 @@ const findLastStudentId = async()=>{
     .sort({
         createdAt:-1,
     }).lean()
-    return lastStudent?.id?lastStudent.id.substring(6):undefined;
+    return lastStudent?.id?lastStudent.id:undefined;
 }
 export const generateStudentId =async (payload:TAcademicSemester)=>{
     //first time 0000
@@ -25,7 +25,7 @@ export const generateStudentId =async (payload:TAcademicSemester)=>{
     let currentId = (0).toString();
     const lastStudentId = await findLastStudentId();
     //2031010001
-     const lastStudentSemesterCode = lastStudentId?.substring(0,4);
+     const lastStudentSemesterCode = lastStudentId?.substring(4,6);
      const lastStudentYear = lastStudentId?.substring(0,4);
      const currentSemesterCode = payload.code;
      const currentYear = payload.year;

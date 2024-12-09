@@ -29,6 +29,7 @@ const createStudentIntoDB = async(password:string,payload:TStudent)=>{
    const session = await mongoose.startSession();
    try{
   //set generated it
+     session.startTransaction();
   userData.id = await generateStudentId(admissionSemester);
 
   //create a user (transaction-1)
@@ -48,6 +49,7 @@ const createStudentIntoDB = async(password:string,payload:TStudent)=>{
   }
   await session.commitTransaction();
   await session.endSession();
+  return newStudent;
     }catch(err){
         await session.abortTransaction();
         console.error(err);

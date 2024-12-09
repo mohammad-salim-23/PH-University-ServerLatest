@@ -1,8 +1,9 @@
 import {  Request, Response } from "express";
 import { UserService } from "./user.service";
 import sendResponse from "../../../utils/sendResponse";
-import httpStatus from "http-status";
+
 import catchAsync from "../../../utils/catchAsync";
+import { StatusCodes } from "http-status-codes";
 const createStudent = catchAsync(async (req: Request, res: Response) => {
     
   const {password,student:studentData} = req.body;
@@ -10,7 +11,7 @@ const createStudent = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.createStudentIntoDB(password,studentData);
 
   sendResponse(res,{
-    statusCode:httpStatus.OK,
+    statusCode:StatusCodes.OK,
     success:true,
     message:'Student is created successfully',
     data:result
