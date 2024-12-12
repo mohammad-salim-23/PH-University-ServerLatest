@@ -34,7 +34,7 @@ export type TStudent={
     bloodGroup?:'A+'|'A-'|'B+'|'B-'|'AB+'|'AB-'|'O+'|'O-';
     presentAddress:string;
     permanentAddress:string;
-    gurdian:TGurdian;
+    guardian:TGurdian;
     localGuardian:TLocalGuardian;
     profiling?:string;
     admissionSemester:Types.ObjectId;

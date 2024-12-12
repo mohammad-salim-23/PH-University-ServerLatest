@@ -145,7 +145,7 @@ const studentSchema = new Schema<TStudent,StudentModel>({
         type: String,
         required: [true, 'Permanent address is required'],
     },
-    gurdian: {type:guardianSchema,
+    guardian: {type:guardianSchema,
         required:[true,'gurdian information is required']
     },
     localGuardian: {
