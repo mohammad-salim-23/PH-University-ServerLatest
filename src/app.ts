@@ -18,10 +18,12 @@ app.use(cors());
 app.use('/api/v1', router);
 
 
-app.get('/', (req: Request, res: Response) => {
+const test = (req:Request,res:Response)=>{
+  //Promise.reject();->unhandleRejection
   const a = 10;
-  res.send({ value: a }); // Send as a JSON object
-});
+  console.log(a);
+}
+app.get('/',test);
 //global error handler
 app.use(globalErrorHandler)
 //Not Found
