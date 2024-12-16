@@ -8,11 +8,11 @@ import { StatusCodes } from "http-status-codes";
 
 const getAllStudents = catchAsync(async (req, res) => {
  
-  const result = await StudentServices.getAllStudentsFromDB();
+  const result = await StudentServices.getAllStudentsFromDB(req.query);
   sendResponse(res,{
     statusCode:StatusCodes.OK,
     success:true,
-    message:'Student is created successfully',
+    message:'Student are retrieved successfully',
     data:result
   })
 
@@ -24,7 +24,7 @@ const getSingleStudent = catchAsync(async (req, res) => {
   sendResponse(res,{
     statusCode:StatusCodes.OK,
     success:true,
-    message:'Student is created successfully',
+    message:'Student is retrieved successfully',
     data:result
   })
 

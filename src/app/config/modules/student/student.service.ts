@@ -8,8 +8,28 @@ import { User } from "../user/user.model";
 import { TStudent } from "./student.interface";
 
 
-const getAllStudentsFromDB=async()=>{
-    const result = await Student.find().populate('admissionSemester')
+const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
+  const queryObj = {...query};//copying req.query object so that we can mutate the copy object
+  const studentSearchableFields=['email','name.firstName','presentAddress'];
+  let searchTerm = '';//set default value
+  //if searchTerm is given set it
+  if(query?.searchTerm){
+    searchTerm = query.searchTerm as string;
+  }
+  //How our format should be for partial match
+  /*
+  {email:{$regex:query.searchTerm, $options:i}}
+  {presentAddress:{$regex:query.searchTerm, $options:i}}
+  {'name.firstName':{$regex:query.searchTerm, $options:i}}
+  
+  */
+ //We are dynamically doing it using loop
+ const searchQuery = Student.find({
+  $or: studentSearchableFields.map((field)=>({
+    [field]:{$regex:searchTerm,$options:'i'}
+  }))
+ })
+    const result = await searchQuery.find().populate('admissionSemester')
     .populate({
         path:'academicDepartment',
         populate:{
