@@ -30,7 +30,7 @@ const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
   }))
  })
  //Filtering dunctionality
- const excludeFields = ['searchTerm','sort','limit','page'];
+ const excludeFields = ['searchTerm','sort','limit','page', 'fields'];
  excludeFields.forEach((el)=>delete queryObj[el]);//Deleting The fields so that it can't match or filter exactly
  const filterQuery =searchQuery
  .find(queryObj)
@@ -61,8 +61,20 @@ const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
  }
  const sortQuery =filterQuery.sort(sort);
  const paginateQuery = sortQuery.skip(skip);
- const limitQuery =await paginateQuery.limit(limit);
-   return limitQuery;;
+ const limitQuery = paginateQuery.limit(limit);
+ 
+ //fields limiting functionality
+ /**
+  * How our format should be for partial match
+  * fields:'name,email'; >we are accepting from request
+  * fields:'name email';->How it should be
+  */
+ let fields = '-__v';//set default value
+ if(query.fields){
+  fields = (query.fields as string).split(',').join(' ');
+ }
+ const fieldQuery = await limitQuery.select(fields);
+   return fieldQuery;
 }
 const getSingleStudentsFromDB=async(id:string)=>{
      const result = await Student.findOne({id})
