@@ -29,15 +29,40 @@ const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
     [field]:{$regex:searchTerm,$options:'i'}
   }))
  })
-    const result = await searchQuery.find().populate('admissionSemester')
-    .populate({
-        path:'academicDepartment',
-        populate:{
-            path:'academicFaculty'
-        }
-    })
-    ;
-    return result;
+ //Filtering dunctionality
+ const excludeFields = ['searchTerm','sort','limit','page'];
+ excludeFields.forEach((el)=>delete queryObj[el]);//Deleting The fields so that it can't match or filter exactly
+ const filterQuery =searchQuery
+ .find(queryObj)
+ .populate('admissionSemester')
+ .populate({
+   path: 'academicDepartment',
+   populate: {
+     path: 'academicFaculty',
+   },
+ });
+ //Sorting functionality
+ let sort = '-createdAt';//set default value
+ //If sort is give set it
+ if(query.sort){
+  sort = query.sort as string;
+ }
+ //Pagination functionality
+ let page=1;
+ let limit = 1;
+ let skip=0;
+ //if limit is given set it
+ if(query.limit){
+  limit = Number(query.limit);
+ }
+ if(query.page){
+  page = Number(query.page);
+  skip = (page-1)*limit;
+ }
+ const sortQuery =filterQuery.sort(sort);
+ const paginateQuery = sortQuery.skip(skip);
+ const limitQuery =await paginateQuery.limit(limit);
+   return limitQuery;;
 }
 const getSingleStudentsFromDB=async(id:string)=>{
      const result = await Student.findOne({id})
