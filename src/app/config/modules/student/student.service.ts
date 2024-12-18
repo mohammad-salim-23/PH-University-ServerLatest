@@ -9,6 +9,7 @@ import { TStudent } from "./student.interface";
 
 
 const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
+  /*
   const queryObj = {...query};//copying req.query object so that we can mutate the copy object
   const studentSearchableFields=['email','name.firstName','presentAddress'];
   let searchTerm = '';//set default value
@@ -22,7 +23,7 @@ const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
   {presentAddress:{$regex:query.searchTerm, $options:i}}
   {'name.firstName':{$regex:query.searchTerm, $options:i}}
   
-  */
+  
  //We are dynamically doing it using loop
  const searchQuery = Student.find({
   $or: studentSearchableFields.map((field)=>({
@@ -68,13 +69,14 @@ const getAllStudentsFromDB=async(query:Record<string,unknown>)=>{
   * How our format should be for partial match
   * fields:'name,email'; >we are accepting from request
   * fields:'name email';->How it should be
-  */
+  
  let fields = '-__v';//set default value
  if(query.fields){
   fields = (query.fields as string).split(',').join(' ');
  }
  const fieldQuery = await limitQuery.select(fields);
    return fieldQuery;
+   */
 }
 const getSingleStudentsFromDB=async(id:string)=>{
      const result = await Student.findOne({id})
