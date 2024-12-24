@@ -6,6 +6,7 @@ import { AcademicFacultyRoutes } from "../config/modules/academicFaculty/academi
 import { AcademicDepartmentRoutes } from "../config/modules/academicDepartmentt/academicDepartment.route";
 import { FacultyRoutes } from "../config/modules/Faculty/Faculty.route";
 
+
 const router = Router();
 const moduleRoutes=[
     {
