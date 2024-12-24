@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
 import config from "../..";
-import { TAcademicSemester } from "../academicSemester/academicSemester.interface";
+
 import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import { TStudent } from "../student/student.interface";
 import { Student } from "../student/student.model";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
-import { generateStudentId } from "./user.utils";
+import { generateFacultyId, generateStudentId } from "./user.utils";
 import AppError from "../../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
 import { TFaculty } from "../Faculty/faculty.interface";
 import { AcademicDepartment } from "../academicDepartmentt/academicDepartment.model";
+import { Faculty } from "../Faculty/faculty.model";
 
 const createStudentIntoDB = async(password:string,payload:TStudent)=>{
 
@@ -78,10 +79,34 @@ const createFacultyIntoDB = async(password:string, payload:TFaculty)=>{
   try{
     session.startTransaction();
     //set generated id
-    userData.id = await generateFacultyId
+    userData.id = await generateFacultyId();
+    // create a user(transaction-1)
+    const newUser = await User.create([userData],{session});//array
+    //create a faculty
+    if(!newUser.length){
+      throw new AppError(StatusCodes.BAD_REQUEST,'Failed to create user');
+    }
+    // set id, _id as user
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;//refference _id
+    //create a faculty 9transaction-2
+    const newFaculty = await Faculty.create([payload],{session});
+    if(!newFaculty.length){
+      throw new AppError(StatusCodes.BAD_REQUEST,'Failed to create faculty');
+
+    }
+    await session.commitTransaction();
+    await session.endSession();
+    return newFaculty;
+  }catch(err:any){
+    await session.abortTransaction();
+    await session.endSession();
+    await session.endSession();
+    throw new Error(err);
   }
 
 }
-export const UserService={
-    createStudentIntoDB 
+export const UserServices={
+    createStudentIntoDB ,
+    createFacultyIntoDB 
 }
