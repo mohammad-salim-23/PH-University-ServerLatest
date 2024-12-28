@@ -64,12 +64,12 @@ const getAllSemsterRegistrationFromDB = async(
     const result = await semesterRegistrationQuery.modelQuery;
     return result;
 };
-const getSingleSemesterRegistrationFromDB = async(id:string)=>{
+const getSingleSemesterRegistrationsFromDB = async(id:string)=>{
     const result = await SemesterRegistration.findById(id);
     return result;
 }
 export const SemesterRegistrationService={
     createSemesterRegistrationIntoDB,
     getAllSemsterRegistrationFromDB,
-    getSingleSemesterRegistrationFromDB
+    getSingleSemesterRegistrationsFromDB
 }
