@@ -1,5 +1,5 @@
 
-export const SemesterRegistrationStatus = ['UPCOMING', 'ONGOING', 'ENDED'];
+export const SemesterRegistrationStatus = ['UPCOMING', 'ONGOING', 'ENDED'] as const;
     export const RegistrationStatus = {
         UPCOMING: 'UPCOMING',
         ONGOING: 'ONGOING',
