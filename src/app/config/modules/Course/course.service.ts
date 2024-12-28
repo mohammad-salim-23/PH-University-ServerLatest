@@ -121,9 +121,11 @@ const deleteCourseFromDB = async(id:string)=>{
     const result = await CourseFaculty.findByIdAndUpdate(
         id,
         {
-            $pull:{faculties:{$in:payload}},
+           course:id,
+           $addToSet:{faculties:{$each:payload}},
         },
         {
+            upsert:true,
             new:true,
         },
     );
