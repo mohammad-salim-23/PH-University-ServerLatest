@@ -13,5 +13,13 @@ router.post('/create-semester-registration',
 router.get('/:id',
         SemesterRegistrationController.getSingleSemesterRegistrations,
 )
+//update route
+router.patch(
+    '/:id',
+    validateRequest(
+        SemesterRegistrationValidations.upadateSemesterRegistrationValidationSchema,
+    ),
+    SemesterRegistrationController.updateSemesterRegistration
+);
 router.get('/',SemesterRegistrationController.getAllSemesterRegistrations);
 export const semesterRegistrationRoutes = router;
