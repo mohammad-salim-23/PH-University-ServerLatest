@@ -12,7 +12,7 @@ const createSemesterRegistration = catchAsync(
         );
   
       sendResponse(res, {
-        statusCode: httpStatus.OK,
+        statusCode: StatusCodes.OK,
         success: true,
         message: 'Semester Registration is created successfully!',
         data: result,

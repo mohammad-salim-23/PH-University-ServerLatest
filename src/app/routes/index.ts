@@ -7,6 +7,7 @@ import { AcademicDepartmentRoutes } from "../config/modules/academicDepartmentt/
 import { FacultyRoutes } from "../config/modules/Faculty/Faculty.route";
 import { AdminRoutes } from "../config/modules/Admin/admin.route";
 import { CourseRoutes } from "../config/modules/Course/course.route";
+import { semesterRegistrationRoutes } from "../config/modules/semesterRegistration/semesterRegistration.route";
 
 
 const router = Router();
@@ -32,6 +33,10 @@ const moduleRoutes=[
 {
      path:'/courses',
      route:CourseRoutes
+},
+{
+       path:'/semester-registrations',
+       route:semesterRegistrationRoutes
 },
     {
         path:'/academic-semesters',
