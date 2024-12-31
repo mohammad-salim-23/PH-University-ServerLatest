@@ -141,9 +141,9 @@ const getAllOfferedCourseFromDB = async(query:Record<string, unknown>)=>{
 const getSingleOfferedCourseFromDB  = async(id:string)=>{
     const offeredCourse =await OfferedCourse.findById(id);
 
-    if(!offeredCourse){
-        throw new AppError(404, 'Offered course not found');
-    }
+    // if(!offeredCourse){
+    //     throw new AppError(404, 'Offered course not found');
+    // }
     return offeredCourse;
 }
 const updateOfferedCourseIntoDB = async(
