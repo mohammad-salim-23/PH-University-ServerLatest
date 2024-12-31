@@ -184,5 +184,6 @@ export const SemesterRegistrationService={
     createSemesterRegistrationIntoDB,
     getAllSemsterRegistrationFromDB,
     getSingleSemesterRegistrationsFromDB,
-    updateSemesterRegistrationIntoDB 
+    updateSemesterRegistrationIntoDB ,
+    deleteSemesterRegistrationFromDB 
 }
