@@ -75,7 +75,7 @@ const createSemesterRegistration = catchAsync(
       sendResponse(res, {
         statusCode:StatusCodes.OK,
         success: true,
-        message: 'Semester Registration is updated successfully',
+        message: 'Semester Registration is deleted successfully',
         data: result,
       })
     }
