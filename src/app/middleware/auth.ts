@@ -9,7 +9,7 @@ import { User } from "../config/modules/user/user.model";
 const auth =(...requiredRoles : TUserRole[])=>{
     return catchAsync(async (req:Request, res:Response, next:NextFunction)=>{
         const token = req.headers.authorization;
-        
+        console.log(token);
         if(!token){
             throw new AppError(StatusCodes.UNAUTHORIZED,'You are not authorized!')
         }
@@ -37,9 +37,10 @@ const auth =(...requiredRoles : TUserRole[])=>{
     }
 
     if(user.passwordChangedAt && User.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat as number)){
+      
         throw new AppError(StatusCodes.UNAUTHORIZED,'You are not authorized!')
     }
-        if(requiredRoles && !requiredRoles.includes(role )){
+        if(requiredRoles && !requiredRoles.includes(role)){
             throw new AppError(StatusCodes.UNAUTHORIZED,'You are not authorized!')
         }
     req.user = decoded as JwtPayload;
